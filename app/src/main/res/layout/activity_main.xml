@@ -5,15 +5,109 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_primary"
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/logo"
+        android:textAllCaps="true"
+        android:textColor="@color/light_secondary"
+        android:textSize="@dimen/fontsize_title"
+        app:layout_constraintBottom_toTopOf="@+id/btnSmall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSmall"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10sp"
+        android:minWidth="180dip"
+        android:text="@string/btn_start_1x1"
+        android:textAlignment="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/btnMedium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <Button
+        android:id="@+id/btnMedium"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start_2x2"
+        app:layout_constraintBottom_toTopOf="@+id/btnLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSmall" />
+
+    <Button
+        android:id="@+id/btnLarge"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start_3x3"
+        app:layout_constraintBottom_toTopOf="@+id/btnGigantic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMedium" />
+
+    <Button
+        android:id="@+id/btnVeryLarge"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start_4x4"
+        app:layout_constraintBottom_toTopOf="@+id/btnMassive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGigantic" />
+
+    <Button
+        android:id="@+id/btnMassive"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/btn_start_5x5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnVeryLarge" />
+
+    <Button
+        android:id="@+id/btnGigantic"
+        style="@style/Button.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start_6x6"
+        app:layout_constraintBottom_toTopOf="@+id/btnVeryLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLarge" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:width="50dp"
+        android:backgroundTint="@color/dark_primary"
+        android:maxWidth="50dp"
+        android:maxHeight="60dp"
+        android:minWidth="50dp"
+        android:minHeight="60dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:text="@string/btn_help"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,14 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+    <style name="Button.Light" parent="ThemeOverlay.AppCompat">
+        <item name="android:backgroundTint">@color/light_secondary</item>
+        <item name="android:textColor">@color/dark_primary</item>
+        <item name="android:shape">@color/dark_primary</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:minWidth">180dip</item>
+    </style>
 
     <style name="Theme.AlpiMaze" parent="Base.Theme.AlpiMaze" />
 </resources>
