@@ -1,7 +1,6 @@
 package com.thepantoster.alpimaze
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,15 +16,16 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        var myMaze:Maze=Maze(50,50,10)
+        var myMaze:Maze=Maze(20,20,1)
         myMaze.generateMaze()
         myMaze.mazeLayout.forEach {
 
 
-            println(it.joinToString().replace("wall","#").replace("floor"," "))
+            println(it.joinToString().replace("wall","#").replace("floor"," ").replace("shortPathE"," ").replace("shortPathS"," ").replace("shortPath","O").replace("start","S").replace("end","E"))
+
 
         }
-
+        println("-------------------------")
 
     }
 }
