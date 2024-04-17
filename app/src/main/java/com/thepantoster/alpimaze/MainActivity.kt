@@ -16,5 +16,16 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        var myMaze:Maze=Maze(20,20,1)
+        myMaze.generateMaze()
+        myMaze.mazeLayout.forEach {
+
+
+            println(it.joinToString().replace("wall","#").replace("floor"," ").replace("shortPathE"," ").replace("shortPathS"," ").replace("shortPath","O").replace("start","S").replace("end","E"))
+
+
+        }
+        println("-------------------------")
+
     }
 }
