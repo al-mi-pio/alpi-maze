@@ -6,4 +6,9 @@
     <string name="btn_start_4x4">Bardo duży (4x4)</string>
     <string name="btn_start_5x5">Ogromny (5x5)</string>
     <string name="btn_start_6x6">Gigantyczny (6x6)</string>
+    <string name="time">Czas</string>
+    <string name="btn_undo">Cofnij</string>
+    <string name="btn_hint">Podpowiedź</string>
+    <string name="btn_done">Gotowe</string>
+    <string name="btn_back">Wstecz</string>
 </resources>
