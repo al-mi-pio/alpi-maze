@@ -3,6 +3,7 @@ package com.thepantoster.alpimaze
 import kotlin.IndexOutOfBoundsException
 import kotlin.random.Random
 
+
 class Maze(h:Int,w:Int,minLen:Int) {
     var height:Int=h
     var width:Int=w
@@ -12,17 +13,21 @@ class Maze(h:Int,w:Int,minLen:Int) {
     var mazeLayout = Array(h) { Array<BlockType>(w) { BlockType.wall } }
     val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
     var listOfShortestPath:Array<Array<Int>> = emptyArray()
+
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
         sides.shuffle()
         startPosition=sides[0]
         endPosition=sides[1]
         fixExit()
+
         carvePath(startPosition[1],startPosition[0])
         var shortestPathLength=findShortestPath(startPosition,endPosition)
 
         while(length>shortestPathLength){
             println("faulty maze "+shortestPathLength)
+            listOfShortestPath = emptyArray()
+
             mazeLayout = Array(height) { Array<BlockType>(width) { BlockType.wall } }
 
             sides.shuffle()
@@ -48,30 +53,55 @@ class Maze(h:Int,w:Int,minLen:Int) {
             }
         }
     }
-    private fun carvePath(positionY:Int,positionX: Int){
-        directions.shuffle()
-        directions.forEach {
-            var directionY=it[0]
-            var directionX=it[1]
-            if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor){
-                try {
+
+    private fun carvePath(startY: Int, startX: Int) {
+        var stack = mutableListOf<Array<Int>>()
+        stack.push(arrayOf(startY, startX))
 
 
-                    if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor && (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) && (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0)) {
+        while (stack.isNotEmpty()) {
+
+            val (positionY, positionX) = stack.pop()
 
 
-                        mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
+            directions.shuffle()
 
-                        carvePath(positionY + directionY, positionX + directionX)
+
+            directions.forEach {
+                val directionY = it[0]
+                val directionX = it[1]
+
+                if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor) {
+                    try {
+
+                        if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
+                            (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                            (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0)
+                        ) {
+
+                            mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
+
+
+                            stack.push(arrayOf(positionY + directionY, positionX + directionX))
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+
+
                     }
-                }catch (e:IndexOutOfBoundsException) {
-                    //pass
                 }
             }
-
         }
     }
+
+    private fun <T> MutableList<T>.push(item: T) {
+        add(item)
+    }
+
+    private fun <T> MutableList<T>.pop(): T {
+        return removeAt(lastIndex)
+    }
     private fun highlightShortestPath(touchPoint:Array<Int>,movesFromStart:Array<Array<Array<Int>>>,movesFromEnd:Array<Array<Array<Int>>>,gen:Int,pos:Int){
+        println("this somehow helps")
         var touchPointSplitStart:Array<Int> = touchPoint
         var touchPointSplitEnd:Array<Int> = touchPoint
         var generationStart=gen
@@ -111,13 +141,14 @@ class Maze(h:Int,w:Int,minLen:Int) {
         }
     }
     private fun findShortestPath(start:Array<Int>,end:Array<Int>):Int{
+        println("i am here")
         var movesFromStart:Array<Array<Array<Int>>> = emptyArray()
         var movesFromEnd:Array<Array<Array<Int>>> = emptyArray()
         movesFromStart+= arrayOf(arrayOf(start[1],start[0]))
         movesFromEnd+= arrayOf(arrayOf(end[1],end[0]))
         var generation:Int=0
 
-        for(d in 0..height*width){
+        for(d in 0..height*width/2){
 
             var nextGenerationOfMoves:Array<Array<Int>> = emptyArray()
 
