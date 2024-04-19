@@ -8,4 +8,11 @@
     <string name="btn_start_5x5">Massive (5x5)</string>
     <string name="btn_start_6x6">Gigantic (6x6)</string>
     <string name="btn_help" translatable="false">\?</string>
+    <string name="time">Time</string>
+    <string name="empty_time" translatable="false">00:00</string>
+    <string name="btn_hint">Hint</string>
+    <string name="btn_undo">Undo</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_back">Back</string>
+    <string name="empty_score" translatable="false">0000</string>
 </resources>
