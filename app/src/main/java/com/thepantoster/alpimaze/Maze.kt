@@ -1,11 +1,7 @@
 package com.thepantoster.alpimaze
 
-
-
-import kotlin.Error
 import kotlin.IndexOutOfBoundsException
 import kotlin.random.Random
-
 
 class Maze(h:Int,w:Int,minLen:Int) {
     var height:Int=h
@@ -14,7 +10,7 @@ class Maze(h:Int,w:Int,minLen:Int) {
     var endPosition = arrayOf(0,1)
     var length=minLen
     var mazeLayout = Array(h) { Array<BlockType>(w) { BlockType.wall } }
-
+    var listOfShortestPath:Array<Array<Int>> = emptyArray()
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
         sides.shuffle()
@@ -40,8 +36,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
     }
-    //1=floor
-    //0=wall
     private fun carvePath(positionY:Int,positionX: Int){
         val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
         directions.shuffle()
@@ -84,19 +78,21 @@ class Maze(h:Int,w:Int,minLen:Int) {
                         touchPointSplitStart = arrayOf(touchPointSplitStart[0] + it[0], touchPointSplitStart[1] + it[1])
                         mazeLayout[touchPointSplitStart[0]][touchPointSplitStart[1]] = BlockType.shortPath
                         generationStart--
+                        listOfShortestPath+= arrayOf(touchPointSplitStart[0],touchPointSplitStart[1])
                         g=true
                     }
 
 
                 }
 
-            g=false
+                g=false
                 directions.forEach {
                     var dir:Array<Int> =it
                     if (movesFromEnd[generationEnd].any{it.contentDeepEquals(arrayOf(touchPointSplitEnd[0] + dir[0], touchPointSplitEnd[1] + dir[1]))} && g==false) {
                         touchPointSplitEnd = arrayOf(touchPointSplitEnd[0] + it[0], touchPointSplitEnd[1] + it[1])
                         mazeLayout[touchPointSplitEnd[0]][touchPointSplitEnd[1]] = BlockType.shortPath
                         generationEnd--
+                        listOfShortestPath+= arrayOf(touchPointSplitEnd[0],touchPointSplitEnd[1])
                         g=true
                     }
 
