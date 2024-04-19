@@ -10,13 +10,14 @@ class Maze(h:Int,w:Int,minLen:Int) {
     var endPosition = arrayOf(0,1)
     var length=minLen
     var mazeLayout = Array(h) { Array<BlockType>(w) { BlockType.wall } }
+    val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
     var listOfShortestPath:Array<Array<Int>> = emptyArray()
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
         sides.shuffle()
         startPosition=sides[0]
         endPosition=sides[1]
-
+        fixExit()
         carvePath(startPosition[1],startPosition[0])
         var shortestPathLength=findShortestPath(startPosition,endPosition)
 
@@ -27,17 +28,27 @@ class Maze(h:Int,w:Int,minLen:Int) {
             sides.shuffle()
             startPosition=sides[0]
             endPosition=sides[1]
+            fixExit()
 
             carvePath(startPosition[1],startPosition[0])
             shortestPathLength=findShortestPath(startPosition,endPosition)
         }
+
         length=shortestPathLength
 
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
     }
+    fun fixExit(){
+        for(i in 0..3){
+            try{
+                mazeLayout[endPosition[1]+directions[i][0]][endPosition[0]+directions[i][1]]
+            }catch(e:IndexOutOfBoundsException){
+                mazeLayout[endPosition[1]-directions[i][0]][endPosition[0]-directions[i][1]]=BlockType.floor
+            }
+        }
+    }
     private fun carvePath(positionY:Int,positionX: Int){
-        val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
         directions.shuffle()
         directions.forEach {
             var directionY=it[0]
@@ -61,7 +72,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
         }
     }
     private fun highlightShortestPath(touchPoint:Array<Int>,movesFromStart:Array<Array<Array<Int>>>,movesFromEnd:Array<Array<Array<Int>>>,gen:Int,pos:Int){
-        val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
         var touchPointSplitStart:Array<Int> = touchPoint
         var touchPointSplitEnd:Array<Int> = touchPoint
         var generationStart=gen
@@ -109,7 +119,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
 
         for(d in 0..height*width){
 
-            val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
             var nextGenerationOfMoves:Array<Array<Int>> = emptyArray()
 
             for(i in 0..3) {
