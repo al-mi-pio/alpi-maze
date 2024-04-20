@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val size = view.tag.toString().toInt()
-        val myMaze = Maze(2000,2000,2000)
+        val myMaze = Maze(2000,2000,200)
 
         GlobalScope.launch(Dispatchers.Default) {
             loadMaze(size,myMaze)
@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             println("------------8-------------")
             //myMaze.showMaze() - to be implemented
-            myMaze.mazeLayout.forEach {
+            /*myMaze.mazeLayout.forEach {
                 println(it.joinToString().replace(" ","").replace("wall","#").replace("floor"," ").replace("shortPathE"," ").replace("shortPathS"," ").replace("shortPath","O").replace("start","S").replace("end","E").replace(",",""))
-            }
+            }*/
         }
     }
     fun onGoHomeHandle(view: View) {
