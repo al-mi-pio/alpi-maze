@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val size = view.tag.toString().toInt()
-        val myMaze = Maze(10, 10, 5)
+        val myMaze = Maze(2000,2000,2000)
 
         GlobalScope.launch(Dispatchers.Default) {
             loadMaze(size,myMaze)

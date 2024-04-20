@@ -1,7 +1,9 @@
 package com.thepantoster.alpimaze
 
+
 import java.lang.Thread.sleep
 import kotlin.IndexOutOfBoundsException
+import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -24,19 +26,27 @@ class Maze(h:Int,w:Int,minLen:Int) {
             mazeLayout = Array(height) { Array<BlockType>(width) { BlockType.wall } }
             shortestPathList = mutableListOf<Array<Int>>()
             currLength=carveShortestPath(startPosition[1],startPosition[0],length)
+
         }
         length=currLength
 
         endPosition=shortestPathList.pop()
         endPosition.reverse()
 
+        carveFullPath()
+        highlightShortestPath()
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
     }
 
-
-    private fun carveFullPath(startY: Int, startX: Int) {
-        var initialStack=shortestPathList
+    private fun highlightShortestPath(){
+        shortestPathList.forEach{
+            mazeLayout[it[0]][it[1]]=BlockType.shortPath
+        }
+    }
+    private fun carveFullPath() {
+        var initialStack= mutableListOf<Array<Int>>()
+        initialStack.addAll(shortestPathList)
 
 
 
@@ -57,12 +67,13 @@ class Maze(h:Int,w:Int,minLen:Int) {
 
                         if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
                             (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
-                            (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0)
+                            (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
+                            (mazeLayout[positionY - directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                            (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.floor || directionY == 0)
+
                         ) {
 
                             mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
-
-
                             initialStack.push(arrayOf(positionY + directionY, positionX + directionX))
                         }
                     } catch (e: IndexOutOfBoundsException) {
@@ -93,31 +104,32 @@ class Maze(h:Int,w:Int,minLen:Int) {
                 val directionX = directions[i][1]
 
                 if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0) {
-                    if (mazeLayout[positionY + directionY][positionX + directionX] != BlockType.shortPath) {
+
+                    if (mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor && canItTurn(directionX,directionY,positionX,positionY)) {
                         try {
 
-                            if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.shortPath &&
-                                (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.shortPath || directionX == 0) &&
-                                (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.shortPath || directionY == 0) &&
-                                (mazeLayout[positionY - directionX][positionX + directionX] != BlockType.shortPath || directionX == 0) &&
-                                (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.shortPath || directionY == 0)
+                            if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
+                                (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                                (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
+                                (mazeLayout[positionY - directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                                (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.floor || directionY == 0)
                             ) {
-                                mazeLayout[positionY + directionY][positionX + directionX] =
-                                    BlockType.shortPath
+                                mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
                                 positionX = positionX + directionX
                                 positionY = positionY + directionY
-                                shortestPathList.push(
-                                    arrayOf(
-                                        positionY + directionY,
-                                        positionX + directionX
-                                    )
-                                )
+                                shortestPathList.push(arrayOf(positionY , positionX))
+
+
+
+
+
+                                length++
                                 break@dFor
                             }
                         } catch (e: IndexOutOfBoundsException) {
                             //pass
                         }
-                        length++
+
                     }
                 }
                 else if(length>minLen){
@@ -137,6 +149,25 @@ class Maze(h:Int,w:Int,minLen:Int) {
 
         }
         return length
+    }
+    private fun canItTurn(dx:Int,dy:Int,px:Int,py:Int):Boolean{
+        var result:Boolean=true
+        var positionX=px
+        var positionY=py
+        while(true) {
+            try {
+                if(mazeLayout[positionY+dy][positionX+dx]==BlockType.floor){
+                    result=false
+                    break
+                }
+                positionX+=dx
+                positionY+=dy
+            } catch (e: IndexOutOfBoundsException) {
+                break
+            }
+        }
+
+        return result
     }
 
 }
