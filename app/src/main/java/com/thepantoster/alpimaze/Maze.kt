@@ -1,9 +1,9 @@
 package com.thepantoster.alpimaze
 
 
-
-import kotlin.Error
+import java.lang.Thread.sleep
 import kotlin.IndexOutOfBoundsException
+import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -14,152 +14,160 @@ class Maze(h:Int,w:Int,minLen:Int) {
     var endPosition = arrayOf(0,1)
     var length=minLen
     var mazeLayout = Array(h) { Array<BlockType>(w) { BlockType.wall } }
+    val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
+    var shortestPathList = mutableListOf<Array<Int>>()
 
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
         sides.shuffle()
         startPosition=sides[0]
-        endPosition=sides[1]
-
-        carvePath(startPosition[1],startPosition[0])
-        var shortestPathLength=findShortestPath(startPosition,endPosition)
-
-        while(length>shortestPathLength){
-            println("faulty maze "+shortestPathLength)
+        var currLength=carveShortestPath(startPosition[1],startPosition[0], length )
+        while(currLength<length){
             mazeLayout = Array(height) { Array<BlockType>(width) { BlockType.wall } }
+            shortestPathList = mutableListOf<Array<Int>>()
+            currLength=carveShortestPath(startPosition[1],startPosition[0],length)
 
-            sides.shuffle()
-            startPosition=sides[0]
-            endPosition=sides[1]
-
-            carvePath(startPosition[1],startPosition[0])
-            shortestPathLength=findShortestPath(startPosition,endPosition)
         }
-        length=shortestPathLength
+        length=currLength
 
+        endPosition=shortestPathList.pop()
+        endPosition.reverse()
+
+        carveFullPath()
+        highlightShortestPath()
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
     }
-    //1=floor
-    //0=wall
-    private fun carvePath(positionY:Int,positionX: Int){
-        val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
-        directions.shuffle()
-        directions.forEach {
-            var directionY=it[0]
-            var directionX=it[1]
-            if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor){
-                try {
 
-
-                    if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor && (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) && (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0)) {
-
-
-                        mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
-
-                        carvePath(positionY + directionY, positionX + directionX)
-                    }
-                }catch (e:IndexOutOfBoundsException) {
-                    //pass
-                }
-            }
-
+    private fun highlightShortestPath(){
+        shortestPathList.forEach{
+            mazeLayout[it[0]][it[1]]=BlockType.shortPath
         }
     }
-    private fun highlightShortestPath(touchPoint:Array<Int>,movesFromStart:Array<Array<Array<Int>>>,movesFromEnd:Array<Array<Array<Int>>>,gen:Int,pos:Int){
-        val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
-        var touchPointSplitStart:Array<Int> = touchPoint
-        var touchPointSplitEnd:Array<Int> = touchPoint
-        var generationStart=gen
-        var generationEnd=gen-pos
+    private fun carveFullPath() {
+        var initialStack= mutableListOf<Array<Int>>()
+        initialStack.addAll(shortestPathList)
 
 
-        for(i in 1..gen){
 
-                var g:Boolean=false
-                directions.forEach {
+        while (initialStack.isNotEmpty()) {
 
-                    var dir:Array<Int> =it
-                    if (movesFromStart[generationStart].any{it.contentDeepEquals(arrayOf(touchPointSplitStart[0] + dir[0], touchPointSplitStart[1] + dir[1]))} && g==false) {
-                        touchPointSplitStart = arrayOf(touchPointSplitStart[0] + it[0], touchPointSplitStart[1] + it[1])
-                        mazeLayout[touchPointSplitStart[0]][touchPointSplitStart[1]] = BlockType.shortPath
-                        generationStart--
-                        g=true
-                    }
+            val (positionY, positionX) = initialStack.pop()
 
 
-                }
+            directions.shuffle()
 
-            g=false
-                directions.forEach {
-                    var dir:Array<Int> =it
-                    if (movesFromEnd[generationEnd].any{it.contentDeepEquals(arrayOf(touchPointSplitEnd[0] + dir[0], touchPointSplitEnd[1] + dir[1]))} && g==false) {
-                        touchPointSplitEnd = arrayOf(touchPointSplitEnd[0] + it[0], touchPointSplitEnd[1] + it[1])
-                        mazeLayout[touchPointSplitEnd[0]][touchPointSplitEnd[1]] = BlockType.shortPath
-                        generationEnd--
-                        g=true
-                    }
 
-                }
+            directions.forEach {
+                val directionY = it[0]
+                val directionX = it[1]
 
-        }
-    }
-    private fun findShortestPath(start:Array<Int>,end:Array<Int>):Int{
-        var movesFromStart:Array<Array<Array<Int>>> = emptyArray()
-        var movesFromEnd:Array<Array<Array<Int>>> = emptyArray()
-        movesFromStart+= arrayOf(arrayOf(start[1],start[0]))
-        movesFromEnd+= arrayOf(arrayOf(end[1],end[0]))
-        var generation:Int=0
-
-        for(d in 0..height*width){
-
-            val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
-            var nextGenerationOfMoves:Array<Array<Int>> = emptyArray()
-
-            for(i in 0..3) {
-
-                movesFromStart[generation].forEach {
+                if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor) {
                     try {
-                        if(mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] == BlockType.floor){
-                            nextGenerationOfMoves += arrayOf(it[0] + directions[i][0], it[1] + directions[i][1])
-                            mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] = BlockType.shortPathS
-                        }else if(mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] == BlockType.shortPathE){
-                            mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] = BlockType.shortPath
-                            highlightShortestPath(arrayOf(it[0] + directions[i][0],it[1] + directions[i][1]),movesFromStart,movesFromEnd,generation,1)
-                            return ((generation + 1) * 2)
-                        }
-                    }catch(e:IndexOutOfBoundsException){
-                        //pass
-                    }
 
+                        if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
+                            (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                            (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
+                            (mazeLayout[positionY - directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                            (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.floor || directionY == 0)
+
+                        ) {
+
+                            mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
+                            initialStack.push(arrayOf(positionY + directionY, positionX + directionX))
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+
+
+                    }
                 }
             }
-            movesFromStart+=nextGenerationOfMoves
-            nextGenerationOfMoves= emptyArray()
-            for(i in 0..3) {
-
-                movesFromEnd[generation].forEach {
-                    try {
-                        if(mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] == BlockType.floor){
-                            nextGenerationOfMoves += arrayOf(it[0] + directions[i][0], it[1] + directions[i][1])
-                            mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] = BlockType.shortPathE
-                        }else if(mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] == BlockType.shortPathS){
-                            mazeLayout[it[0] + directions[i][0]][it[1] + directions[i][1]] = BlockType.shortPath
-                            highlightShortestPath(arrayOf(it[0] + directions[i][0],it[1] + directions[i][1]),movesFromStart,movesFromEnd,generation,0)
-                            return ((generation + 1) * 2 -1)
-                        }
-                    }catch(e:IndexOutOfBoundsException){
-                        //pass
-                    }
-
-                }
-            }
-            movesFromEnd+=nextGenerationOfMoves
-            generation++
         }
-        println(generation)
-        return 0
     }
 
+    private fun <T> MutableList<T>.push(item: T) {
+        add(item)
+    }
+
+    private fun <T> MutableList<T>.pop(): T {
+        return removeAt(lastIndex)
+    }
+    private fun carveShortestPath(y:Int,x:Int,minLen:Int):Int {
+        var length: Int = 0
+        var positionY: Int = y
+        var positionX: Int = x
+        tW@while (true) {
+            directions.shuffle()
+
+            dFor@for (i in 0..3) {
+                val directionY = directions[i][0]
+                val directionX = directions[i][1]
+
+                if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0) {
+
+                    if (mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor && canItTurn(directionX,directionY,positionX,positionY)) {
+                        try {
+
+                            if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
+                                (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                                (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
+                                (mazeLayout[positionY - directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
+                                (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.floor || directionY == 0)
+                            ) {
+                                mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
+                                positionX = positionX + directionX
+                                positionY = positionY + directionY
+                                shortestPathList.push(arrayOf(positionY , positionX))
+
+
+
+
+
+                                length++
+                                break@dFor
+                            }
+                        } catch (e: IndexOutOfBoundsException) {
+                            //pass
+                        }
+
+                    }
+                }
+                else if(length>minLen){
+                    shortestPathList.push(
+                        arrayOf(
+                            positionY + directionY,
+                            positionX + directionX
+                        )
+                    )
+                    break@tW
+                }
+            if(i==3){
+                return 0
+            }
+            }
+
+
+        }
+        return length
+    }
+    private fun canItTurn(dx:Int,dy:Int,px:Int,py:Int):Boolean{
+        var result:Boolean=true
+        var positionX=px
+        var positionY=py
+        while(true) {
+            try {
+                if(mazeLayout[positionY+dy][positionX+dx]==BlockType.floor){
+                    result=false
+                    break
+                }
+                positionX+=dx
+                positionY+=dy
+            } catch (e: IndexOutOfBoundsException) {
+                break
+            }
+        }
+
+        return result
+    }
 
 }
