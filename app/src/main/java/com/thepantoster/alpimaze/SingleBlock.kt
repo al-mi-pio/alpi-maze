@@ -50,8 +50,10 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         this.setOnClickListener { onClick() }
         if(bType==BlockType.wall){
             background=ContextCompat.getDrawable(context, R.drawable.tile_wall)
-        }else {
+        }else if(bType==BlockType.floor) {
             background = ContextCompat.getDrawable(context, R.drawable.tile_floor)
+        }else{
+            background = ContextCompat.getDrawable(context, R.drawable.tile_destination)
         }
             //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
