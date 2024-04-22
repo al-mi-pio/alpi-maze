@@ -133,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minWidth="200dp"
+            android:onClick="onDoneHandle"
             android:text="@string/btn_done"
             android:textAllCaps="true"
             android:textSize="20sp"

@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
-
+    var myMaze:Maze?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,10 +36,10 @@ class MainActivity : AppCompatActivity() {
 
 
         val size = view.tag.toString().toInt()
-        val myMaze = Maze(size,size,size)
+        myMaze = Maze(size,size,size)
 
 
-        loadMaze(size,myMaze)
+        loadMaze(size, myMaze!!)
 
 
 
@@ -66,9 +66,10 @@ class MainActivity : AppCompatActivity() {
             )
 
             for (j in 0..<cols){
-                ID++
+
 
                 tile = SingleBlock(this,100,myMaze.mazeLayout[i][j],myMaze,ID,size)
+                ID++
                 tile.initialize()
                 mazeRow.addView(tile)
             }
@@ -87,5 +88,18 @@ class MainActivity : AppCompatActivity() {
     }
     fun onGoHomeHandle(view: View) {
         setContentView(R.layout.activity_main)
+    }
+    fun onDoneHandle(view:View){
+        val solved:Int?= myMaze?.checkSolution()
+        val shortestPath:Int? =myMaze?.length
+        if (solved != null) {
+            if(solved>0){
+                // implement the showing of new activity
+                println("solved meow")
+            }else{
+                // implement the showing of new activity
+                println("FAILURE")
+            }
+        }
     }
 }
