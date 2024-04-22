@@ -32,12 +32,12 @@ class Maze(h:Int,w:Int,minLen:Int) {
         length=currLength
 
         endPosition=shortestPathList.pop()
-        endPosition.reverse()
+
 
         carveFullPath()
         //highlightShortestPath()
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
-        mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
+        mazeLayout[endPosition[0]][endPosition[1]]=BlockType.end
     }
 
     private fun highlightShortestPath(){
@@ -173,5 +173,35 @@ class Maze(h:Int,w:Int,minLen:Int) {
 
         return result
     }
-
+    fun checkSolution():Int{
+        //startPosition
+        //selectedPathList y,x
+        //endPosition
+        var lengthOfPath=selectedPathList.size
+        if(checkPath(startPosition[1],startPosition[0])) {
+            return lengthOfPath
+        }
+        else {
+            return 0
+        }
+    }
+    private  fun checkPath(y:Int,x:Int):Boolean{
+        var solved:Boolean = false
+        directions.forEach {
+            if(endPosition.contentEquals(arrayOf(y+it[0],x+it[1]))){
+                return true
+            }
+            if(containsCoordinates(selectedPathList,arrayOf(y+it[0],x+it[1]))){
+                removeCoordinates(selectedPathList,arrayOf(y+it[0],x+it[1]))
+                solved=checkPath(y+it[0],x+it[1])
+            }
+        }
+        return solved
+    }
+    fun removeCoordinates(list: MutableList<Array<Int>>, coordinates: Array<Int>) {
+        list.removeIf { it.contentEquals(coordinates) }
+    }
+    fun containsCoordinates(list: List<Array<Int>>, coordinates: Array<Int>): Boolean {
+        return list.any { it.contentEquals(coordinates) }
+    }
 }
