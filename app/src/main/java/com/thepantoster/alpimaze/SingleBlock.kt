@@ -22,20 +22,19 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
             }
             BlockType.floor->{
                 bType=BlockType.selected
-                myMaze.selectedPathList+= arrayOf(Y,X)
+                myMaze.selectedPathList.add(arrayOf(Y,X))
                 setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_selected))
-                println("meow")
                 invalidate()
 
             }
             BlockType.selected->{
                 bType=BlockType.floor
-                myMaze.selectedPathList.remove(arrayOf(Y,X))
+                myMaze.removeCoordinates(myMaze.selectedPathList,arrayOf(Y,X))
                 setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_floor))
                 invalidate()
             }
             else->{
-                println("meow")
+
             }
         }
     }
@@ -57,4 +56,5 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         }
             //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
+
 }
