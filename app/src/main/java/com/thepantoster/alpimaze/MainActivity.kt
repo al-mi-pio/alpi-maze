@@ -1,10 +1,16 @@
 package com.thepantoster.alpimaze
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.View
+import android.widget.Button
+import android.widget.TableLayout
+import android.widget.TableRow
 import kotlinx.coroutines.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -24,35 +30,60 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun onStartGameHandle(view: View) {
+    fun onStartGameHandle(view: View) = runBlocking{
 
         setContentView(R.layout.activity_game)
 
 
         val size = view.tag.toString().toInt()
-        val myMaze = Maze(2000,2000,200)
+        val myMaze = Maze(size,size,size)
 
-        GlobalScope.launch(Dispatchers.Default) {
-            loadMaze(size,myMaze)
-        }
+
+        loadMaze(size,myMaze)
+
+
 
     }
 
-    suspend fun loadMaze(size: Int,myMaze:Maze) {
+    fun loadMaze(size: Int,myMaze:Maze) {
 
-
-
-
+        var rows: Int = size
+        var cols: Int = size
+        var tileSize: Int = 100
+        var ID:Int=0
+        val maze: TableLayout =  findViewById(R.id.mazeView)
+        var mazeRow: TableRow
+        var tile: Button
+        println("meow")
         myMaze.generateMaze()
+        for (i in 0..<rows){
+            mazeRow = TableRow(this)
+            mazeRow.setLayoutParams(
+                TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+                )
+            )
 
+            for (j in 0..<cols){
+                ID++
 
-        withContext(Dispatchers.Main) {
-            println("------------8-------------")
-            //myMaze.showMaze() - to be implemented
-            /*myMaze.mazeLayout.forEach {
-                println(it.joinToString().replace(" ","").replace("wall","#").replace("floor"," ").replace("shortPathE"," ").replace("shortPathS"," ").replace("shortPath","O").replace("start","S").replace("end","E").replace(",",""))
-            }*/
+                tile = SingleBlock(this,100,myMaze.mazeLayout[i][j],myMaze,ID,size)
+                tile.initialize()
+                mazeRow.addView(tile)
+            }
+            maze.addView(mazeRow, TableLayout.LayoutParams(
+                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT
+            )
+            )
         }
+
+
+
+
+
+
     }
     fun onGoHomeHandle(view: View) {
         setContentView(R.layout.activity_main)

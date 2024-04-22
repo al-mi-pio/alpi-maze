@@ -16,6 +16,7 @@ class Maze(h:Int,w:Int,minLen:Int) {
     var mazeLayout = Array(h) { Array<BlockType>(w) { BlockType.wall } }
     val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
     var shortestPathList = mutableListOf<Array<Int>>()
+    var selectedPathList= mutableListOf<Array<Int>>()
 
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
@@ -34,7 +35,7 @@ class Maze(h:Int,w:Int,minLen:Int) {
         endPosition.reverse()
 
         carveFullPath()
-        highlightShortestPath()
+        //highlightShortestPath()
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[1]][endPosition[0]]=BlockType.end
     }
@@ -58,9 +59,9 @@ class Maze(h:Int,w:Int,minLen:Int) {
             directions.shuffle()
 
 
-            directions.forEach {
-                val directionY = it[0]
-                val directionX = it[1]
+            for(i in 0..3) {
+                val directionY = directions[i][0]
+                val directionX = directions[i][1]
 
                 if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor) {
                     try {
@@ -75,6 +76,9 @@ class Maze(h:Int,w:Int,minLen:Int) {
 
                             mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
                             initialStack.push(arrayOf(positionY + directionY, positionX + directionX))
+                            if(i>0){
+                                break
+                            }
                         }
                     } catch (e: IndexOutOfBoundsException) {
 
