@@ -1,5 +1,6 @@
 package com.thepantoster.alpimaze
 
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.widget.TextView
 import kotlinx.coroutines.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -132,6 +134,34 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         counterJob?.cancel()
+    }
+    fun onHintHandle(view:View){
+        myMaze?.shortestPathList?.shuffle()
+        for(i:Array<Int> in myMaze?.shortestPathList!!){
+            if(!myMaze!!.containsCoordinates(myMaze!!.selectedPathList,i)){
+                var hintID:Int=i[0]* myMaze!!.width+i[1]
+                findViewById<SingleBlock>(hintID).setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.tile_hinted))
+                break
+            }
+        }
+    }
+    fun onUndoHandle(view:View){
+        try {
+            var undo = myMaze?.undoHistory?.last()
+            if(undo!=null) {
+                if (undo[1] == 1) {
+                    findViewById<SingleBlock>(undo[0]).selectClick(true)
+                } else {
+                    findViewById<SingleBlock>(undo[0]).floorClick(true)
+                }
+                myMaze?.undoHistory?.remove(undo)
+            }
+        }catch (e:NoSuchElementException){
+            //pass
+        }
+
+
+
     }
 
 }

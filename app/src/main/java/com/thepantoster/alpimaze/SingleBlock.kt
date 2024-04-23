@@ -24,18 +24,10 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
 
             }
             BlockType.floor->{
-                bType=BlockType.selected
-                myMaze.selectedPathList.add(arrayOf(Y,X))
-                setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_selected))
-                scoreTextView.text = myMaze.selectedPathList.size.toString()
-                invalidate()
+                floorClick(false)
             }
             BlockType.selected->{
-                bType=BlockType.floor
-                myMaze.removeCoordinates(myMaze.selectedPathList,arrayOf(Y,X))
-                setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_floor))
-                scoreTextView.text = myMaze.selectedPathList.size.toString()
-                invalidate()
+                selectClick(false)
             }
             else->{
 
@@ -61,4 +53,24 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
             //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
 
+    fun selectClick(undid:Boolean){
+        bType=BlockType.floor
+        myMaze.removeCoordinates(myMaze.selectedPathList,arrayOf(Y,X))
+        setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_floor))
+        scoreTextView.text = myMaze.selectedPathList.size.toString()
+        if(!undid) {
+            myMaze.undoHistory.add(arrayOf(id, 0))
+        }
+        invalidate()
+    }
+    fun floorClick(undid:Boolean){
+        bType=BlockType.selected
+        myMaze.selectedPathList.add(arrayOf(Y,X))
+        setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_selected))
+        scoreTextView.text = myMaze.selectedPathList.size.toString()
+        if(!undid) {
+            myMaze.undoHistory.add(arrayOf(id,1))
+        }
+        invalidate()
+    }
 }
