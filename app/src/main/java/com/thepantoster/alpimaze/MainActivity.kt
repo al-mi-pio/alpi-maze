@@ -15,7 +15,9 @@ import androidx.core.view.WindowInsetsCompat
 
 
 class MainActivity : AppCompatActivity() {
-    var myMaze:Maze?=null
+    private var myMaze:Maze?=null
+    private var counter = 0
+    private var counterJob: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadMaze(size: Int,myMaze:Maze) {
-
+        counter=0
         var rows: Int = size
         var cols: Int = size
         var tileSize: Int = 100
@@ -81,13 +83,12 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-
-
-
+        startCounter()
 
 
     }
     fun onGoHomeHandle(view: View) {
+        counterJob?.cancel()
         setContentView(R.layout.activity_main)
     }
     fun onDoneHandle(view:View){
@@ -103,4 +104,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private fun startCounter() {
+
+        counterJob = CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+
+                counter++
+
+                findViewById<TextView>(R.id.time).text = counter.toString()
+
+                delay(1000)
+            }
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+
+        counterJob?.cancel()
+    }
+
 }
