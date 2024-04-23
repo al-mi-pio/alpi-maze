@@ -2,17 +2,17 @@ package com.thepantoster.alpimaze
 
 import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
+import android.widget.TextView
 import kotlinx.coroutines.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+
 
 class MainActivity : AppCompatActivity() {
     var myMaze:Maze?=null
@@ -30,13 +30,14 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun onStartGameHandle(view: View) = runBlocking{
+    fun onStartGameHandle(view: View){
 
         setContentView(R.layout.activity_game)
 
 
         val size = view.tag.toString().toInt()
         myMaze = Maze(size,size,size)
+
 
 
         loadMaze(size, myMaze!!)
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             for (j in 0..<cols){
 
 
-                tile = SingleBlock(this,100,myMaze.mazeLayout[i][j],myMaze,ID,size)
+                tile = SingleBlock(this,100,myMaze.mazeLayout[i][j],myMaze,ID,size,findViewById(R.id.score))
                 ID++
                 tile.initialize()
                 mazeRow.addView(tile)

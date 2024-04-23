@@ -1,11 +1,14 @@
 package com.thepantoster.alpimaze
 
 import android.content.Context
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 
 
-class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:Int): AppCompatButton(context) {
+
+class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:Int,private val scoreTextView: TextView): AppCompatButton(context) {
     var size:Int=ts
     var bType:BlockType=type
     var X:Int=id%rows
@@ -24,13 +27,14 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
                 bType=BlockType.selected
                 myMaze.selectedPathList.add(arrayOf(Y,X))
                 setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_selected))
+                scoreTextView.text = myMaze.selectedPathList.size.toString()
                 invalidate()
-
             }
             BlockType.selected->{
                 bType=BlockType.floor
                 myMaze.removeCoordinates(myMaze.selectedPathList,arrayOf(Y,X))
                 setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_floor))
+                scoreTextView.text = myMaze.selectedPathList.size.toString()
                 invalidate()
             }
             else->{
