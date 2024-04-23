@@ -1,5 +1,6 @@
 package com.thepantoster.alpimaze
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -104,14 +105,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    @SuppressLint("SetTextI18n")
     private fun startCounter() {
 
         counterJob = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
 
                 counter++
+                var secs:String= (counter%60).toString()
+                var mins:String= ((counter-counter%60)/60).toString()
 
-                findViewById<TextView>(R.id.time).text = counter.toString()
+                if(secs.length==1){
+                    secs="0"+secs
+                }
+                if(mins.length==1){
+                    mins="0"+mins
+                }
+
+                findViewById<TextView>(R.id.time).text = mins+":"+secs
 
                 delay(1000)
             }
