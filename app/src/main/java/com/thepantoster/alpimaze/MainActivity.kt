@@ -136,6 +136,8 @@ class MainActivity : AppCompatActivity() {
         counterJob?.cancel()
     }
     fun onHintHandle(view:View){
+        // add an ad :D
+
         myMaze?.shortestPathList?.shuffle()
         for(i:Array<Int> in myMaze?.shortestPathList!!){
             if(!myMaze!!.containsCoordinates(myMaze!!.selectedPathList,i)){
