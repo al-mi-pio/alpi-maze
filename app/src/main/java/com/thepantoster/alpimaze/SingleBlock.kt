@@ -1,14 +1,10 @@
 package com.thepantoster.alpimaze
 
 import android.content.Context
-import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-
-
 
 class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:Int,private val scoreTextView: TextView): AppCompatButton(context) {
     var size:Int=ts
@@ -17,14 +13,9 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
     var Y:Int=(id-X)/rows
     var myMaze:Maze=maze
     val ID:Int= id
-
     @Override
     fun onClick() {
-
         when(bType){
-            BlockType.wall->{
-
-            }
             BlockType.floor->{
                 floorClick(false)
             }
@@ -32,7 +23,7 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
                 selectClick(false)
             }
             else->{
-
+                //pass
             }
         }
     }
@@ -53,8 +44,6 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         }else{
             background = ContextCompat.getDrawable(context, R.drawable.tile_destination)
         }
-
-            //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
 
     fun selectClick(undid:Boolean){
