@@ -40,6 +40,7 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         minWidth=size
         maxHeight=size
         minHeight=size
+
         id=ID
         tag=Y
         this.setOnClickListener { onClick() }
@@ -50,6 +51,8 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         }else{
             background = ContextCompat.getDrawable(context, R.drawable.tile_destination)
         }
+        width=size
+        height=size
             //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
 
