@@ -1,6 +1,8 @@
 package com.thepantoster.alpimaze
 
 import android.content.Context
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -36,11 +38,11 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
     }
 
     fun initialize() {
+        layoutParams = TableRow.LayoutParams(size, size)
         maxWidth=size
         minWidth=size
         maxHeight=size
         minHeight=size
-
         id=ID
         tag=Y
         this.setOnClickListener { onClick() }
@@ -51,8 +53,7 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         }else{
             background = ContextCompat.getDrawable(context, R.drawable.tile_destination)
         }
-        width=size
-        height=size
+
             //tile.background = ContextCompat.getDrawable(this, R.drawable.tile_border)
     }
 
