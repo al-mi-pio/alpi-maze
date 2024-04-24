@@ -57,7 +57,12 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         bType=BlockType.floor
         myMaze.removeCoordinates(myMaze.selectedPathList,arrayOf(Y,X))
         setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_floor))
-        scoreTextView.text = myMaze.selectedPathList.size.toString()
+        var score:String=myMaze.selectedPathList.size.toString()
+        var zeroes:String=""
+        for(i in 0..(3-score.length)){
+            zeroes+="0"
+        }
+        scoreTextView.text=zeroes+score
         if(!undid) {
             myMaze.undoHistory.add(arrayOf(id, 0))
         }
@@ -67,7 +72,12 @@ class SingleBlock (context:Context,ts:Int,type:BlockType,maze:Maze,id:Int,rows:I
         bType=BlockType.selected
         myMaze.selectedPathList.add(arrayOf(Y,X))
         setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.tile_selected))
-        scoreTextView.text = myMaze.selectedPathList.size.toString()
+        var score:String=myMaze.selectedPathList.size.toString()
+        var zeroes:String=""
+        for(i in 0..(3-score.length)){
+            zeroes+="0"
+        }
+        scoreTextView.text=zeroes+score
         if(!undid) {
             myMaze.undoHistory.add(arrayOf(id,1))
         }

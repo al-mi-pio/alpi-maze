@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name" translatable="false">AlpiMaze</string>
     <string name="logo" translatable="false">Logo</string>
-    <string name="btn_start_1x1">Small (1x1)</string>
-    <string name="btn_start_2x2">Medium (2x2)</string>
-    <string name="btn_start_3x3">Large (3x3)</string>
-    <string name="btn_start_4x4">Very Large (4x4)</string>
-    <string name="btn_start_5x5">Massive (5x5)</string>
-    <string name="btn_start_6x6">Gigantic (6x6)</string>
+    <string name="btn_start_1x1">Small (20x20)</string>
+    <string name="btn_start_2x2">Medium (40x40)</string>
+    <string name="btn_start_3x3">Large (60x60)</string>
+    <string name="btn_start_4x4">Very Large (80x80)</string>
+    <string name="btn_start_5x5">Massive (100x100)</string>
+    <string name="btn_start_6x6">Gigantic (120x120)</string>
     <string name="btn_help" translatable="false">\?</string>
     <string name="time">Time</string>
     <string name="empty_time" translatable="false">00:00</string>
