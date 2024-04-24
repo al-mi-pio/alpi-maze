@@ -15,10 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.concurrent.timer
 
 
 class MainActivity : AppCompatActivity() {
     private var myMaze:Maze?=null
+    private var usedSize:Int=0
     private var counter = 0
     private var counterJob: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,12 +42,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
 
 
-        val size = view.tag.toString().toInt()
-        myMaze = Maze(size,size,size)
+        usedSize = view.tag.toString().toInt()
+
+        myMaze = Maze(usedSize,usedSize,usedSize)
 
 
 
-        loadMaze(size, myMaze!!)
+        loadMaze(usedSize, myMaze!!)
 
 
 
@@ -90,9 +93,17 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    //this will be used on the return in new activity/view
     fun onGoHomeHandle(view: View) {
         counterJob?.cancel()
         setContentView(R.layout.activity_main)
+    }
+    fun onGoAgainHandle(view:View){
+        myMaze = Maze(usedSize,usedSize,usedSize)
+        var toRemove:TableLayout=findViewById(R.id.mazeView)
+        toRemove.removeAllViews()
+        loadMaze(usedSize, myMaze!!)
+        counter=0
     }
     fun onDoneHandle(view:View){
         val solved:Int?= myMaze?.checkSolution()
