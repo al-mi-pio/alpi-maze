@@ -26,45 +26,24 @@ class Maze(h:Int,w:Int,minLen:Int) {
             mazeLayout = Array(height) { Array<BlockType>(width) { BlockType.wall } }
             shortestPathList = mutableListOf<Array<Int>>()
             currLength=carveShortestPath(startPosition[1],startPosition[0],length)
-
         }
         length=currLength
-
         endPosition=shortestPathList.pop()
-
-
         carveFullPath()
-        //highlightShortestPath()
         mazeLayout[startPosition[1]][startPosition[0]]=BlockType.start
         mazeLayout[endPosition[0]][endPosition[1]]=BlockType.end
-    }
-
-    private fun highlightShortestPath(){
-        shortestPathList.forEach{
-            mazeLayout[it[0]][it[1]]=BlockType.shortPath
-        }
     }
     private fun carveFullPath() {
         var initialStack= mutableListOf<Array<Int>>()
         initialStack.addAll(shortestPathList)
-
-
-
         while (initialStack.isNotEmpty()) {
-
             val (positionY, positionX) = initialStack.pop()
-
-
             directions.shuffle()
-
-
             for(i in 0..3) {
                 val directionY = directions[i][0]
                 val directionX = directions[i][1]
-
                 if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0 && mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor) {
                     try {
-
                         if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
                             (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
                             (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
@@ -72,7 +51,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
                             (mazeLayout[positionY + directionY][positionX - directionY] != BlockType.floor || directionY == 0)
 
                         ) {
-
                             mazeLayout[positionY + directionY][positionX + directionX] = BlockType.floor
                             initialStack.push(arrayOf(positionY + directionY, positionX + directionX))
                             if(i>0){
@@ -80,18 +58,15 @@ class Maze(h:Int,w:Int,minLen:Int) {
                             }
                         }
                     } catch (e: IndexOutOfBoundsException) {
-
-
+                        //pass
                     }
                 }
             }
         }
     }
-
     private fun <T> MutableList<T>.push(item: T) {
         add(item)
     }
-
     fun <T> MutableList<T>.pop(): T {
         return removeAt(lastIndex)
     }
@@ -101,16 +76,12 @@ class Maze(h:Int,w:Int,minLen:Int) {
         var positionX: Int = x
         tW@while (true) {
             directions.shuffle()
-
             dFor@for (i in 0..3) {
                 val directionY = directions[i][0]
                 val directionX = directions[i][1]
-
                 if (positionX + directionX < width - 1 && positionX + directionX > 0 && positionY + directionY < height - 1 && positionY + directionY > 0) {
-
                     if (mazeLayout[positionY + directionY][positionX + directionX] != BlockType.floor && canItTurn(directionX,directionY,positionX,positionY)) {
                         try {
-
                             if (mazeLayout[positionY + directionY * 2][positionX + directionX * 2] != BlockType.floor &&
                                 (mazeLayout[positionY + directionX][positionX + directionX] != BlockType.floor || directionX == 0) &&
                                 (mazeLayout[positionY + directionY][positionX + directionY] != BlockType.floor || directionY == 0) &&
@@ -121,18 +92,12 @@ class Maze(h:Int,w:Int,minLen:Int) {
                                 positionX = positionX + directionX
                                 positionY = positionY + directionY
                                 shortestPathList.push(arrayOf(positionY , positionX))
-
-
-
-
-
                                 length++
                                 break@dFor
                             }
                         } catch (e: IndexOutOfBoundsException) {
                             //pass
                         }
-
                     }
                 }
                 else if(length>minLen){
@@ -148,8 +113,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
                 return 0
             }
             }
-
-
         }
         return length
     }
@@ -173,9 +136,6 @@ class Maze(h:Int,w:Int,minLen:Int) {
         return result
     }
     fun checkSolution():Int{
-        //startPosition
-        //selectedPathList y,x
-        //endPosition
         var lengthOfPath=selectedPathList.size
         if(checkPath(startPosition[1],startPosition[0])) {
             return lengthOfPath
