@@ -1,9 +1,8 @@
 package com.thepantoster.alpimaze
 
 
-import java.lang.Thread.sleep
+
 import kotlin.IndexOutOfBoundsException
-import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -17,7 +16,7 @@ class Maze(h:Int,w:Int,minLen:Int) {
     val directions= arrayOf(arrayOf(0,1), arrayOf(1,0), arrayOf(-1,0), arrayOf(0,-1))
     var shortestPathList = mutableListOf<Array<Int>>()
     var selectedPathList= mutableListOf<Array<Int>>()
-
+    var undoHistory= mutableListOf<Array<Int>>()
     fun generateMaze(){
         val sides:Array<Array<Int>> = arrayOf(arrayOf(0,Random.nextInt(height-3)+1), arrayOf(width-1,Random.nextInt(height-3)+1), arrayOf(Random.nextInt(width-3)+1,0), arrayOf(Random.nextInt(width-3)+1,height-1))
         sides.shuffle()
@@ -93,7 +92,7 @@ class Maze(h:Int,w:Int,minLen:Int) {
         add(item)
     }
 
-    private fun <T> MutableList<T>.pop(): T {
+    fun <T> MutableList<T>.pop(): T {
         return removeAt(lastIndex)
     }
     private fun carveShortestPath(y:Int,x:Int,minLen:Int):Int {

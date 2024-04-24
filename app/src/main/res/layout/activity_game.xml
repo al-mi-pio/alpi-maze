@@ -122,6 +122,7 @@
             style="@style/Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onUndoHandle"
             android:text="@string/btn_undo"
             app:icon="@drawable/undo_icon"
             app:iconGravity="textTop" />
@@ -144,6 +145,7 @@
             style="@style/Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onHintHandle"
             android:text="@string/btn_hint"
             app:icon="@drawable/bulb_icon" />
 
