@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="btn_start_1x1">Mały (1x1)</string>
-    <string name="btn_start_2x2">Średni (2x2)</string>
-    <string name="btn_start_3x3">Duży (3x3)</string>
-    <string name="btn_start_4x4">Bardo duży (4x4)</string>
-    <string name="btn_start_5x5">Ogromny (5x5)</string>
-    <string name="btn_start_6x6">Gigantyczny (6x6)</string>
+    <string name="btn_start_1x1">Mały (20x20)</string>
+    <string name="btn_start_2x2">Średni (40x40)</string>
+    <string name="btn_start_3x3">Duży (60x60)</string>
+    <string name="btn_start_4x4">Bardo duży (80x80)</string>
+    <string name="btn_start_5x5">Ogromny (100x100)</string>
+    <string name="btn_start_6x6">Gigantyczny (120x120)</string>
     <string name="time">Czas</string>
     <string name="btn_undo">Cofnij</string>
     <string name="btn_hint">Podpowiedź</string>

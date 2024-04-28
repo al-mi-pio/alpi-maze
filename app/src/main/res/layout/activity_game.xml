@@ -83,7 +83,6 @@
         app:verticalPanEnabled="true"
         app:zoomEnabled="true"
         app:flingEnabled="true"
-        android:clickable="false"
         app:scrollEnabled="true"
         app:oneFingerScrollEnabled="true"
         app:twoFingersScrollEnabled="true"
