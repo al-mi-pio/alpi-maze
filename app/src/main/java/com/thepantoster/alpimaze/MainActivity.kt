@@ -1,8 +1,6 @@
 package com.thepantoster.alpimaze
 
-
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -15,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import kotlin.concurrent.timer
-
 
 class MainActivity : AppCompatActivity() {
     private var myMaze:Maze?=null
@@ -27,33 +23,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
     }
     fun onStartGameHandle(view: View){
-
         setContentView(R.layout.activity_game)
-
-
         usedSize = view.tag.toString().toInt()
-
         myMaze = Maze(usedSize,usedSize,usedSize)
-
-
-
         loadMaze(usedSize, myMaze!!)
-
-
-
     }
-
     fun loadMaze(size: Int,myMaze:Maze) {
         counter=0
         var rows: Int = size
@@ -63,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         val maze: TableLayout =  findViewById(R.id.mazeView)
         var mazeRow: TableRow
         var tile: Button
-        println("meow")
         myMaze.generateMaze()
         for (i in 0..<rows){
             mazeRow = TableRow(this)
@@ -73,10 +53,7 @@ class MainActivity : AppCompatActivity() {
                     TableRow.LayoutParams.MATCH_PARENT
                 )
             )
-
             for (j in 0..<cols){
-
-
                 tile = SingleBlock(this,100,myMaze.mazeLayout[i][j],myMaze,ID,size,findViewById(R.id.score))
                 ID++
                 tile.initialize()
@@ -88,10 +65,7 @@ class MainActivity : AppCompatActivity() {
             )
             )
         }
-
         startCounter()
-
-
     }
     //this will be used on the return in new activity/view
     fun onGoHomeHandle(view: View) {
@@ -111,19 +85,17 @@ class MainActivity : AppCompatActivity() {
         if (solved != null) {
             if(solved>0){
                 // implement the showing of new activity
-                println("solved meow")
+                //SUCCESS
             }else{
                 // implement the showing of new activity
-                println("FAILURE")
+                //FAILURE
             }
         }
     }
     @SuppressLint("SetTextI18n")
     private fun startCounter() {
-
         counterJob = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
-
                 counter++
                 var secs:String= (counter%60).toString()
                 var mins:String= ((counter-counter%60)/60).toString()
@@ -134,19 +106,17 @@ class MainActivity : AppCompatActivity() {
                 if(mins.length==1){
                     mins="0"+mins
                 }
-
                 findViewById<TextView>(R.id.time).text = mins+":"+secs
-
                 delay(1000)
             }
         }
     }
     override fun onDestroy() {
         super.onDestroy()
-
         counterJob?.cancel()
     }
     fun onHintHandle(view:View){
+
         // add an ad :D
 
         myMaze?.shortestPathList?.shuffle()
@@ -172,9 +142,5 @@ class MainActivity : AppCompatActivity() {
         }catch (e:NoSuchElementException){
             //pass
         }
-
-
-
     }
-
 }
