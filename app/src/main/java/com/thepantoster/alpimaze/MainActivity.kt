@@ -80,15 +80,27 @@ class MainActivity : AppCompatActivity() {
         counter=0
     }
     fun onDoneHandle(view:View){
+        var mistakes:Int=0
+        var startAmount=0
         val solved:Int?= myMaze?.checkSolution()
         val shortestPath:Int? =myMaze?.length
         if (solved != null) {
             if(solved>0){
                 // implement the showing of new activity
-                //SUCCESS
+                //SUCCESS code
+                mistakes=(myMaze?.selectedPathList?.size ?: 0) - (myMaze?.shortestPathList?.size ?: 0)
+                if(mistakes<usedSize/20){
+                    startAmount=3
+                }
+                else if(mistakes<usedSize/10){
+                    startAmount=2
+                }
+                else if(mistakes<usedSize/2){
+                    startAmount=1
+                }
             }else{
                 // implement the showing of new activity
-                //FAILURE
+                //FAILURE code
             }
         }
     }
